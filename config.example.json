@@ -1,0 +1,10 @@
+{
+  "DEBUG": true,
+  "db_credentials": {
+      "name": "DB_Name",
+      "user": "test_user",
+      "password": "password123",
+      "host": "localhost",
+      "port": "5432"
+  }
+}

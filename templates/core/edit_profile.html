@@ -1,0 +1,15 @@
+{% extends 'core/wrapper.html' %}
+
+{% block content %}
+
+    <h2>Редактировать страницу {{ user.username }}</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ edit_profile_form.as_p }}
+
+        <button type="submit">submit</button>
+    </form>
+
+
+{% endblock content %}

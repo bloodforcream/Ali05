@@ -1,0 +1,10 @@
+{% extends 'core/wrapper.html' %}
+{% block content %}
+    <div>
+        {% for organization in all_organizations %}
+            <br>
+            <a href="{% url 'organization' organization.name %}">{{ organization.name }}</a>
+
+        {% endfor %}
+    </div>
+{% endblock content %}

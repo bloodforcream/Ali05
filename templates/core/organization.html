@@ -1,0 +1,16 @@
+{% extends 'core/wrapper.html' %}
+{% block content %}
+    <div>
+
+        <h1>{{ target_organization.name }}</h1>
+        <div>{{ target_organization.description }}</div>
+        <div> {% for phone_number in target_organization.phone_numbers.all %}
+            - {{ phone_number.phone_number }} -
+        {% endfor %}</div>
+
+        <div>{% for address in target_organization.addresses.all %}
+            <p>{{ address.address }}</p>
+        {% endfor %}</div>
+
+    </div>
+{% endblock content %}

@@ -1,0 +1,12 @@
+{% extends 'core/wrapper.html' %}
+{% block content %}
+    <div>
+            {% for subcategory in target_subcategories %}
+                <ul>
+                    <li>
+                        <a href="{% url 'subcategory' subcategory.name %}">{{ subcategory.name }}</a>
+                    </li>
+                </ul>
+            {% endfor %}
+    </div>
+{% endblock content %}

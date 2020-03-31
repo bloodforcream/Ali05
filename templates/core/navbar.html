@@ -1,0 +1,14 @@
+<div>
+    <a href="{% url 'home' %}">Ali05</a> -
+    <a href="{% url 'organizations' %}">Организации</a> -
+    <a href="">Люди</a>
+    {% if user.is_anonymous %}
+        <a href="{% url 'register' %}">Регистрация</a> -
+        <a href="{% url 'login' %}">Логин</a>
+    {% else %}
+        <a href="{% url 'profile' user.id %}">{{ user.username }}</a> -
+        <a href="{% url 'logout' %}">Логаут</a>
+    {% endif %}
+
+</div>
+<br>

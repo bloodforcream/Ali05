@@ -1,0 +1,10 @@
+{
+  "DEBUG": false,
+  "db_credentials": {
+    "name": "dbname",
+    "user": "postgres",
+    "password": "testing123",
+    "host": "localhost",
+    "port": "5432"
+  }
+}
