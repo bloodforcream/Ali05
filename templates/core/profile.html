@@ -21,7 +21,52 @@
             <h3><a href="{% url 'edit_profile' %}">Edit Profile</a></h3>
         {% endif %}
     </table>
+    <br>
+    {% if request.user.profile == prof %}
+            <form method="post">
+                {% csrf_token %}
+                <p>
+                    {{ create_post_form.as_p }}
+                </p>
+                <button type="submit">Post</button>
+            </form>
+        {% endif %}
+    <table>
+        <tr>
+            {% for post in posts %}
+                <ul style="text-align:-webkit-right;">
+                    <p>{{ post.date_posted }}</p>
+                    <p>{{ post.text }}</p>
+                    {% if request.user == prof.user %}
+                        <p>
+                            <a href="{{ post.delete_post }}">Delete</a>
+                        </p>
+                    {% endif %}
+                </ul>
+            {% endfor %}
+        </tr>
+        <div class="pagination" style="text-align:-webkit-right;">
+    <span class="step-links">
 
+    <br>
+        {% if posts.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ posts.previous_page_number }}">previous</a>
+        {% endif %}
+
+        {% if posts.has_next %}
+        <span class="current">
+            Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+        </span>
+        {% endif %}
+
+        {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}">next</a>
+            <a href="?page={{ posts.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+        </div>
+    </table>
 
 
 {% endblock content %}

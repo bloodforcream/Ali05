@@ -1,17 +1,24 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth import authenticate, login
 
-from core.forms import UserRegistrationForm, EditProfileForm, TagsListForm
-from core.models import Category, Subcategory, Organization, Profile
+from Ali05.settings import POSTS_ON_HOME_PAGE, POSTS_ON_PROFILE_PAGE
+from core.forms import UserRegistrationForm, EditProfileForm, TagsListForm, CreatePostForm
+from core.models import Category, Subcategory, Organization, Profile, Post
+from core.tools import save_cur_user_info, save_cur_prof_info, paginate, create_post
 
 
 def home(request):
     if request.method == 'GET':
+        all_posts = Post.objects.all().order_by('-date_posted')
+        all_posts = paginate(request, all_posts, POSTS_ON_HOME_PAGE)
+
         all_categories = Category.objects.all()
         context = {
-            'all_categories': all_categories
+            'all_categories': all_categories,
+            'all_posts': all_posts
         }
         return render(request, 'core/home.html', context)
 
@@ -41,10 +48,21 @@ def register(request):
 def profile(request, pk):
     profile_user = get_object_or_404(User, id=pk)
     target_profile = Profile.objects.get(user=profile_user)
-    context = {
-        'prof': target_profile,
-    }
-    return render(request, 'core/profile.html', context)
+
+    if request.method == 'GET':
+        create_post_form = CreatePostForm()
+        posts = target_profile.posts.all().order_by('-date_posted')
+        posts = paginate(request, posts, POSTS_ON_PROFILE_PAGE)
+
+        context = {
+            'prof': target_profile,
+            'create_post_form': create_post_form,
+            'posts': posts,
+        }
+        return render(request, 'core/profile.html', context)
+    else:
+        create_post(request, target_profile)
+        return redirect('profile', pk=target_profile.pk)
 
 
 @login_required(login_url='login')
@@ -82,18 +100,6 @@ def edit_profile(request):
         return render(request, 'core/edit_profile.html', context)
 
 
-def save_cur_user_info(target_user, parameters):
-    for field, value in parameters.items():
-        setattr(target_user, field, value)
-    target_user.save()
-
-
-def save_cur_prof_info(target_profile, image):
-    if image:
-        target_profile.image = image
-    target_profile.save()
-
-
 def category(request, category_name):
     context = {}
     if request.method == 'GET':
@@ -125,7 +131,7 @@ def subcategory(request, subcategory_name):
             context = {
                 'subcategory': current_subcategory,
                 'orgs': orgs,
-                'tags_form': tags_form # TODO: fix context
+                'tags_form': tags_form  # TODO: fix context
             }
         return render(request, 'core/subcategory.html', context)
 
@@ -145,6 +151,13 @@ def organizations(request):
         'all_organizations': all_organizations
     }
     return render(request, 'core/organizations.html', context)
+
+
+@login_required(login_url='login')
+def delete_post(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    post.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def about_project(request):

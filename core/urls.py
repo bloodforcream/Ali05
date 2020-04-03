@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 from django.views.decorators.cache import cache_page
 
 from core.views import home, subcategory, category, organization, organizations, about_project, register, profile, \
-    edit_profile
+    edit_profile, delete_post
 
 urlpatterns = [
     path('register/', register, name='register'),
@@ -19,4 +19,7 @@ urlpatterns = [
     path('organizations/<str:org_name>/', organization, name='organization'),
 
     path('about_project/', about_project, name='about-project'),
+
+    path('deletepost/<int:pk>/', delete_post, name='delete_post'),
+
 ]

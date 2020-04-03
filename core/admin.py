@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Organization, PhoneNumber, Address, Category, Subcategory, Profile, Tag
+from core.models import Organization, PhoneNumber, Address, Category, Subcategory, Profile, Tag, Post
 
 admin.site.register(Category)
 
@@ -25,3 +25,4 @@ admin.site.register(PhoneNumber)
 admin.site.register(Subcategory)
 admin.site.register(Profile)
 admin.site.register(Tag)
+admin.site.register(Post)

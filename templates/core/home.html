@@ -1,13 +1,44 @@
 {% extends 'core/wrapper.html' %}
 {% block content %}
-
-    <div>
-        {% for category in all_categories %}
+    <table>
+        {% for post in all_posts %}
             <ul>
-                <li>
-                    <a href="{% url 'category' category.name %}">{{ category.name }}</a>
-                </li>
+                <img src="{{ post.author.image.url }}" alt="Profile image" style="width:40px;height:40px;">
+                <a href="{% url 'profile' post.author.pk %}"
+                   style="text-align:justify">{{ post.get_authors_name }} </a>
+                | {{ post.date_posted }} <p style="text-align:justify">{{ post.text }}</p>
             </ul>
         {% endfor %}
-    </div>
+
+        {% if all_posts is not None %}
+            {% if all_posts.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ all_posts.previous_page_number }}">previous</a>
+            {% endif %}
+
+            {% if all_posts.has_next %}
+                <span class="current">
+                Page {{ all_posts.number }} of {{ all_posts.paginator.num_pages }}.
+            </span>
+            {% endif %}
+
+            {% if all_posts.has_next %}
+                <a href="?page={{ all_posts.next_page_number }}">next</a>
+                <a href="?page={{ all_posts.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        {% endif %}
+    </table>
+    <table>
+        <div>
+            {% for category in all_categories %}
+                <ul>
+                    <li>
+                        <a href="{% url 'category' category.name %}">{{ category.name }}</a>
+                    </li>
+                </ul>
+            {% endfor %}
+        </div>
+    </table>
+
+
 {% endblock content %}

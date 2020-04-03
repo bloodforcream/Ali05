@@ -124,3 +124,6 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+POSTS_ON_PROFILE_PAGE = config['POSTS_ON_PROFILE_PAGE']
+POSTS_ON_HOME_PAGE = config['POSTS_ON_HOME_PAGE']

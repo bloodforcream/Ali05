@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+from django.shortcuts import reverse
 
 
 class Profile(models.Model):
@@ -75,4 +76,19 @@ class Tag(models.Model):
         return self.name
 
 
+class Post(models.Model):
+    author = models.ForeignKey(Profile, related_name='posts', null=True, on_delete=models.SET_NULL,
+                               verbose_name="author's profile")
+    text = models.CharField(max_length=1400)
+    date_posted = models.DateTimeField(auto_now_add=True)
 
+    def delete_post(self):
+        return reverse('delete_post', kwargs={
+            'pk': self.pk
+        })
+
+    def get_authors_name(self):
+        return self.author.user.username
+
+    def __str__(self):
+        return f'By {self.author.user.username} - {self.text[:10]}'

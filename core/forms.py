@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from core.models import Subcategory
+from core.models import Subcategory, Post
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -29,3 +29,11 @@ class TagsListForm(forms.Form):
         related_tags = Subcategory.objects.get(name=subcategory_name).tags.all()
         self.fields['tags'].choices = [(tag, tag) for tag in related_tags]
 
+
+class CreatePostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 3}),
+        }
