@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth import authenticate, login
 
-from core.forms import UserRegistrationForm, EditProfileForm
+from core.forms import UserRegistrationForm, EditProfileForm, TagsListForm
 from core.models import Category, Subcategory, Organization, Profile
 
 
@@ -103,10 +103,30 @@ def category(request, category_name):
 
 
 def subcategory(request, subcategory_name):
-    context = {}
+    current_subcategory = Subcategory.objects.get(name=subcategory_name)
     if request.method == 'GET':
-        current_subcategory = Subcategory.objects.get(name=subcategory_name)
-        context['subcategory'] = current_subcategory
+        tags_form = TagsListForm()
+        tags_form.set_tags_choices(subcategory_name=subcategory_name)
+        orgs = Subcategory.objects.get(name=subcategory_name).organizations.all()
+        context = {
+            'subcategory': current_subcategory,
+            'orgs': orgs,
+            'tags_form': tags_form
+        }
+        return render(request, 'core/subcategory.html', context)
+
+    else:
+        tags_form = TagsListForm(request.POST)
+        tags_form.set_tags_choices(subcategory_name=subcategory_name)
+
+        if tags_form.is_valid():
+            tags = tags_form.cleaned_data['tags']
+            orgs = Subcategory.objects.get(name=subcategory_name).organizations.filter(tags__name__in=tags).distinct()
+            context = {
+                'subcategory': current_subcategory,
+                'orgs': orgs,
+                'tags_form': tags_form # TODO: fix context
+            }
         return render(request, 'core/subcategory.html', context)
 
 

@@ -24,6 +24,7 @@ class Profile(models.Model):
 class Organization(models.Model):
     name = models.CharField(max_length=150)
     description = models.CharField(max_length=700, blank=True, null=True)
+    owner = models.ForeignKey(Profile, related_name='organizations', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -57,10 +58,21 @@ class Subcategory(models.Model):
     parent_category = models.ForeignKey(Category, related_name='subcategories', blank=True, null=True,
                                         on_delete=models.SET_NULL)
     organizations = models.ManyToManyField(Organization, related_name='subcategories', blank=True)
-
     middle_layer = models.ForeignKey('self', blank=True, related_name='parent_layer', null=True,
                                      on_delete=models.SET_NULL)
 
     def __str__(self):
         string = f'{self.name} - {self.parent_category} - {self.middle_layer}' if self.middle_layer else f'{self.name} - {self.parent_category}'
         return string
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=80)
+    organizations = models.ManyToManyField(Organization, related_name='tags', blank=True)
+    subcategories = models.ManyToManyField(Subcategory, related_name='tags', blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+

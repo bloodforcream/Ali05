@@ -1,5 +1,6 @@
 import os
 import json
+import secret_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -8,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6qkf4-g1x%4hv45r%2j&ub8kwbcn-dok8=z-c1kz=kafmzttiw'
+SECRET_KEY = secret_settings.SECRET_KEY
 
 with open('config.json') as config_file:
     config = json.load(config_file)
@@ -41,6 +42,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'OPTIONS': {
+            'server_max_value_length': 1024 * 1024 * 2,
+        }
+    }
+}
 
 ROOT_URLCONF = 'Ali05.urls'
 
@@ -106,6 +117,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 STATIC_URL = '/static/'
 

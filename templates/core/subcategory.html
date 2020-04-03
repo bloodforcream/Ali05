@@ -1,7 +1,13 @@
 {% extends 'core/wrapper.html' %}
 {% block content %}
     <div>
-        {% for offer in subcategory.organizations.all %}
+        <form method="post">
+            {% csrf_token %}
+            {{ tags_form.as_p }}
+
+            <button type="submit">submit</button>
+        </form>
+        {% for offer in orgs%}
             <ul>
                 <li>
                     <a href="{% url 'organization' offer.name %}">{{ offer.name }}</a>
